@@ -145,8 +145,8 @@ for categories in categories_list:
   category_display_str = ', '.join(categories)
   print(f'\n-- GSML for categories: {category_display_str}')
 
-  recall, precision, mean_overlap = calculate_recall_and_precision('gsml.csv', 'submitted_gsml.csv', categories)
+  recall, precision, mean_overlap = calculate_recall_and_precision('./data/gsml.csv', './data/submitted_gsml.csv', categories)
   print(f'GSML vs example: recall => {recall}, precision => {precision}, overlap => {mean_overlap}')
 
-  recall, precision, mean_overlap = calculate_recall_and_precision('gsml.csv', 'gsml.csv', categories)
+  recall, precision, mean_overlap = calculate_recall_and_precision('./data/gsml.csv', './data/gsml.csv', categories)
   print(f'GSML vs self: recall => {recall}, precision => {precision}, overlap => {mean_overlap}')
