@@ -7,18 +7,24 @@ The texts we use are descriptions of basketball games produced three different n
 
 For detailed information on the shared task, see https://www.aclweb.org/anthology/2020.inlg-1.28/
 
+## News
+* 4 June - Submission: we will release the test set on 15 June, and ask you to email us your results by 29 June; we will compute precision/recall against gold-standard error annotations (these wpnt be released on 15 June).   Please also email us your code (for metrics) or protocol (for human evals) on or before 15 June.  We dont intend to run this ourselves, but want a record in case concerns arise about participants changing metric/protocol after seeing the test set.
+* 1 June - evaluate.py updated to work at document level and report additional info about recall/precision at token level
+* 17 May - added section about Tokenization
+* 16 May - added information about accompanying papers to Shared task schedule
+
 ## Shared task schedule
 * 15 December 2020: Shared task officially launched at INLG 2020
 * 1 March 2021: Deadline for notifying us that you intend to participate in the shared task (please email   e.reiter@abdn.ac.uk )
 * 31 March 2021: Evaluation script to be realeased.
 * 15 June 2021: Submission of techniques (metrics and protocols).  We will release the test set (without annotations), and ask participants to try their techniques on the test set and give us results within 2 weeks.   We will compare the results against our gold-standard human annotations of inaccuracies, and compute recall and precision statistics.
+* 12 July 2021: (Optional) Submission of short papers about shared task entries.  These should follow the format of INLG short papers, but do not need to be anonymised.  We will review and provide comments by 26 July
 * 1 August 2021: Results announced
+* 12 August 2021: Camera-ready versions of (optional) short papers due
 * 20-24 Sept 2021: Presentation of shared task at INLG 2021 (https://inlg2021.github.io/)
 
 For more information or to register interest, please email Ehud Reiter at   e.reiter@abdn.ac.uk
 
-## Important Updates:
-Please note that prior to the commits on Monday 22nd February, the line for S042 in [games.csv](https://github.com/ehudreiter/accuracySharedTask/blob/games.csv) was incorrect (it referred to an incorrect game which is not part of the shared task).  There was also an issue with the GSML for S029.  Both of these have been fixed, but please make sure you are on the most recent version of this repository.
 
 ## What is in this repo
 This repository contains a set of 60 accuracy-annotated texts for the shared task, some of which were extracted from https://github.com/nlgcat/evaluating_accuracy. 
@@ -28,9 +34,11 @@ This repository contains a set of 60 accuracy-annotated texts for the shared tas
 * appropriate subset of Rotowire JSON: For convenience, we have included the file [shared_task.jsonl](https://github.com/ehudreiter/accuracySharedTask/blob/main/shared_task.jsonl) which includes the lines from the Rotowire test set, for each of our annotated documents.
 * game information ([games.csv](https://github.com/ehudreiter/accuracySharedTask/blob/main/games.csv)): Information on the games we annotated to create the GSML.
 * example annotation exercise ([example_exercise](https://github.com/ehudreiter/accuracySharedTask/blob/main/example_exercise)):  An example annotation exercise to familiarize yourself with the task.
-* evaluation script ([evaluate.py](https://github.com/ehudreiter/accuracySharedTask/blob/main/evaluate.py)) and a sample task submission [submitted_gsml.csv](https://github.com/ehudreiter/accuracySharedTask/blob/main/submitted_gsml.csv): To demonstrate how recall and precision are calculated.
+* evaluation script ([evaluate.py](https://github.com/ehudreiter/accuracySharedTask/blob/main/evaluate.py)) and [example_submissions](https://github.com/ehudreiter/accuracySharedTask/tree/main/example_submissions): To demonstrate how recall and precision are calculated.
 
 Data for all games is available at [Rotowire](https://github.com/harvardnlp/boxscore-data) (original Rotowire JSON data).  it is also available at [SportSett](https://github.com/nlgcat/sport_sett_basketball) (extended relational database).  Please note that SportSett currently does not included playoff games, but does provide much more information on regular season games.
+
+Please note that prior to the commits on Monday 22nd February, the line for S042 in [games.csv](https://github.com/ehudreiter/accuracySharedTask/blob/games.csv) was incorrect (it referred to an incorrect game which is not part of the shared task).  There was also an issue with the GSML for S029.  Both of these have been fixed, but please make sure you are on the most recent version of this repository.
 
 ### [games.csv](https://github.com/ehudreiter/accuracySharedTask/blob/main/games.csv) columns
 1. DOC_ID: The ID for the summary within our shared task.  These match the filenames in [texts](https://github.com/ehudreiter/accuracySharedTask/blob/main/texts).
@@ -71,24 +79,37 @@ This file is in the the same format as [Rotowire](https://github.com/harvardnlp/
 In order to familiarize yourself with the problem, as well as the process by which our GSML was created, we suggest that participants annotate one text manually for errors themselves.  For this purpose, we have included an updated version of the qualifying task which we used to screen our crowd-source workers.  The [Example Annotation Exercise](https://github.com/ehudreiter/accuracySharedTask/blob/main/example_exercise/Example_Annotation_Exercise.docx) file contains the instructions we gave to workers, an example annotated text, then a text for you to annotate yourself.  This is not a requirement, although we do think it is a very useful exercise to do, and should only take about 20-30 minutes.  We have provided our solution in the [Example Annotation Solution](https://github.com/ehudreiter/accuracySharedTask/blob/main/example_exercise/Example_Annotation_Solution.docx) document.  This example exercise only differs slightly from that which our MTurk workers when they first started doing annotations for us.  Since then, we have made some minor clarifications to our instructions, it is these updated instructions which have been included here.
 
 ### [evaluate.py](https://github.com/ehudreiter/accuracySharedTask/blob/main/evaluate.py)
-Python script to calculate recall and precision of submitted annotations against the GSML.  An example submission is provided ([submitted_gsml.csv](https://github.com/ehudreiter/accuracySharedTask/blob/main/submitted_gsml.csv)).
+Python script to calculate recall and precision of submitted annotations against the GSML.  Example submissions are provided ([example_submissions](https://github.com/ehudreiter/accuracySharedTask/blob/main/example_submissions)).  The token_lookup.yml file contains a mapping from sentence to document based tokenization and vice versa.
 
-This script outputs three things:
-1. Recall - We consider correct recall as when a submitted mistake overlaps a GSML mistake.  Once a submitted mistake recalls a GSML mistake, the submitted mistake is consumed (it cannot be used to for recall of future GSML mistakes).  Mistakes are iterated left-to-right based on the SENT_TOKEN_START value.  None of the GSML mistakes span multiple sentences.  Please remember that overlapping mistake spans are not permitted.
-2. Precision - We consider correct precision where a submitted mistake overlaps a GSML mistake.  For precision, multiple submitted mistakes can overlap a single GSML mistake and we will count it as correct (GSML mistakes are not consumed like submitted mistakes are for recall)
-3. Overlap - When a submitted mistakes is matched to a GSML mistake for recall, the percentage of token overlap is recorded.  The overlap value is the mean of these percentages.
+Example use:
+`python evaluate.py --gsml=gsml.csv --submitted=example_submissions/submission.csv --token_lookup=token_lookup.yaml`
 
-It is possible for two submitted mistakes to overlap the same GSML mistake.  For example, "Miami Heat" [NAME] could be the gold error, but a submission could have separate submissions of "Miami" [NAME] and "Heat" [NAME].  In this case we would award one instance of correct recall (the single GSML mistake was found) and two instances of correct precision (both submitted mistakes found the gold mistake).
+This script outputs:
+1. Mistake Recall - We consider correct recall as when a submitted mistake overlaps a GSML mistake.  Once a submitted mistake recalls a GSML mistake, the submitted mistake is consumed (it cannot be used to for recall of future GSML mistakes).  Mistakes are iterated left-to-right based on the DOC_TOKEN_START value.  None of the GSML mistakes span multiple sentences.  Please remember that overlapping mistake spans are not permitted.
+2. Mistake Precision - Mistakes are consumed in the same way.
+3. Token Recall - The recall at the token level (where mistakes are not consumed, as tokens are our atomic units).
+4. Token Precision - The precision at the token level
 
-Overlapping spans within one mistake list are not allowed.  For example, a submission cannot include "The Miami" and "Miami Heat" as mistakes on the sequential tokens "The Miami Heat".
+It is possible for two submitted mistakes to overlap the same GSML mistake.  For example, "Miami Heat" [NAME] could be the gold error, but a submission could have separate submissions of "Miami" [NAME] and "Heat" [NAME].  In this case we would award one instance of both correct recall and precision at the mistake level.  At the token level this is not an issue.
 
-We will also calculate per-category recall and precision
+Overlapping token spans within one mistake list are not allowed.  For example, a submission cannot include "The Miami" and "Miami Heat" as mistakes on the sequential tokens "The Miami Heat".
+
+We also calculate per-category recall and precision, the console output first shows the results overall, followed by the results for each category individually.  Some example submissions for testing this script can be found in [example_submissions](https://github.com/ehudreiter/accuracySharedTask/blob/main/example_submissions) with an additional [README](https://github.com/ehudreiter/accuracySharedTask/blob/main/example_submissions/README.md) detailing their content.
+
+PLEASE NOTE:  Results are calculated using document level token IDs, although if you only include sentence level token IDs (and sentence numbers), and this matches our tokenization scheme, then document level IDs will be calculated automatically.
+
+### Tokenization
+Our texts (GENERATED_TEXT) are already tokenized then joined with spaces.  The only sentence delimiting character is the period.  The [evaluate.py](https://github.com/ehudreiter/accuracySharedTask/blob/main/evaluate.py) script will be updated such that it uses document level token ids rather than sentence level ones.  This will make no difference to the way submisions are evaluated, but will mean participants who do not wish to consider sentence breaks do not have to.  It is, however, important that any submissions use the same tokenization as our original texts.
+
+Additional info / background:  The original Rotowire corpus, and texts generated from it, used the nltk tokenizer.  The corpus includes tokenized text as a list with no original format texts.  However, the nltk tokenizer performs poorly on this dataset, tripping over names like C.J. Miles and sometimes not splitting tokens correctly (the vocabulary inludes things like "game.The" as one token).  The spaCy parser also struggles with such names, as does whichever parser WebAnno uses, they end sentences after "C.J.".  WebAnno also tried to split tokens differently, with words like "didn't" becoming three tokens where nltk and spaCy created two.  Therefore, since different parsers not only split sentences differently, but also tokens, we need to use a simple, standard scheme.  The training texts are already formatted by this scheme (albeit joined by whitespace so they are still human readble), and the test texts will be processed in the same way.  If you want to use tools like spaCy to perform, for example, some kind of dependency analysis, then you can, but make sure your submitted token ids align with those from the simple tokenization scheme above.
+
+Note on tokens containing the characters "000":  Because WebAnno was attempting to apply additional tokenization over our already tokenized text, we had to replace apostrophe characters with "000" (a sequence of characters not otherwise in the corpus).  We then replaced this special sequence with apostrophes after the WebAnno export.  However, three of the files in the [texts](https://github.com/ehudreiter/accuracySharedTask/blob/main/texts) directory appear to not have had this replacement applied.  These tokens were never part of any marked errors in the GSML, which is why the test script missed them (it has been updated to check for this, and to check our tokenization scheme wrt the WebAnno export).  The most recent commit has rectified this.  Such tokens are till present in the WebAnno [curations](https://github.com/ehudreiter/accuracySharedTask/blob/main/curations) which are now also included in the repo in their raw export form.
 
 ### Reading the Box Score (fields in shared_task.jsonl)
 Below are definitions of field labels which might not be familiar if you do not follow basketball.  They come from the [Box Score](https://en.wikipedia.org/wiki/Box_score), and whilst some of the headers can differ slightly depending on the source, the ones in the [Rotowire](https://github.com/harvardnlp/boxscore-data), which is the format our data is in are:
 
 #### Basic statistics
-* PTS: [Points](https://en.wikipedia.org/wiki/Point_(basketball)) scored ((2*FGM) + FTM + FG3M)
+* PTS: [Points](https://en.wikipedia.org/wiki/Point_(basketball)) scored ((2&ast;FGM) + FTM + FG3M)
 * REB: total [Rebounds](https://en.wikipedia.org/wiki/Rebound_(basketball))
 * AST: total [Assists](https://en.wikipedia.org/wiki/Assist_(basketball))
 * BLK: total [Blocks](https://en.wikipedia.org/wiki/Block_(basketball))
@@ -111,13 +132,10 @@ There are also shooting statistics, which show how many types of each shot a per
 The three-point shooting statistics should be read as: "Of the total field goals, how many of them were worth three points"
 
 #### Shooting percentages
-There are also shooting percentages.  All such fields end in "_PCT", such as "FG_PCT", FG3_PCT", and "FT_PCT".  In all cases, they are simply derived from MADE/ATTEMPTED.
+There are also shooting percentages.  All such fields end in "&lowbar;PCT", such as "FG&lowbar;PCT", FG3&lowbar;PCT", and "FT&lowbar;PCT".  In all cases, they are simply derived from MADE/ATTEMPTED.
 
 #### Names
 The data also includes player, team, and place names, those should be self-explanatory.
-
-<!-- ### Evaluation Script
-We will release the python script which we will use in the final evaluation to compare participant submitted annotations with the GSML.  This will be available by the end of March.  When comparing submitted annotations against the GSML we will accept annotations as correct where their spans overlap with annotations in the GSML.  In the case where one submitted annotation overlaps with two or more GSML annotations, particpants will only be credited with a single matched error.  Please note that there are no overlapping error spans in the GSML.  We are releasing this script in advance of the release of the withheld test set so that participants can test their submitted annotations are in the correct format (just running against training data to do so). -->
 
 ### SQL Query for SportSett to get game_ids from rotowire line numbers
 Note that playoff games are not currently available in SportSett.  It will, however, give complete access to every regular season game, including the league structure and schedule.  All games in the shared task are regular season games.  
