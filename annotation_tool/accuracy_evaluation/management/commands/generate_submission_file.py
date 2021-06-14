@@ -38,12 +38,24 @@ class Command(BaseCommand):
                     else:
                         if in_error:  # We jumped out of an error, insert error in list and reset pointers
                             token_end = i
-                            errors.append((filename, " ".join(error_tokens), token_start, token_end, error_name))
+                            errors.append((
+                                filename.replace('csv', 'txt'),
+                                None,
+                                None,
+                                " ".join(error_tokens),
+                                None,
+                                None,
+                                token_start,
+                                token_end,
+                                error_name,
+                                None,
+                                None
+                            ))
                             error_name = "NONE"
                             in_error = False
                             error_tokens = list()
 
-        df = pd.DataFrame(errors, columns=["TEXT_ID", "TOKENS", "DOC_TOKEN_START", "DOC_TOKEN_END", "TYPE"])
-        df.to_csv('../data/submissions/algorithm/submission.csv')
+        df = pd.DataFrame(errors, columns=["TEXT_ID", "SENTENCE_ID", "ANNOTATION_ID", "TOKENS", "SENT_TOKEN_START", "SENT_TOKEN_END", "DOC_TOKEN_START", "DOC_TOKEN_END", "TYPE", "CORRECTION", "COMMENT"])
+        df.to_csv('../data/submissions/algorithm/submission.csv', index=False)
 
         self.stdout.write(self.style.SUCCESS(f'Successfully ran command "{self.help}"'))

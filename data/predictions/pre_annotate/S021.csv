@@ -1,7 +1,7 @@
 The	NONE
 Houston	NONE
 Rockets	NONE
-defeated	WORD
+defeated	NONE
 the	NONE
 Sacramento	NONE
 Kings	NONE
@@ -11,11 +11,11 @@ Kings	NONE
 104	NONE
 ,	NONE
 at	NONE
-Golden	NAME
+Golden	NONE
 1	NUMBER
-Center	NAME
+Center	NONE
 on	NONE
-Saturday	NONE
+Saturday	NAME
 .	NONE
 The	NONE
 Rockets	NONE
@@ -27,7 +27,7 @@ Rockets	NONE
 came	NOT_CHECKABLE
 in	NONE
 to	NONE
-Saturday	NONE
+Saturday	NAME
 's	NONE
 contest	NOT_CHECKABLE
 with	NONE
@@ -49,7 +49,7 @@ Rockets	NONE
 came	NOT_CHECKABLE
 in	NONE
 to	NONE
-Saturday	NONE
+Saturday	NAME
 's	NONE
 contest	NOT_CHECKABLE
 with	NONE
@@ -162,7 +162,7 @@ minutes	NONE
 .	NONE
 James	NONE
 Harden	NONE
-led	WORD
+led	NONE
 the	NONE
 way	NONE
 for	NONE
@@ -175,10 +175,10 @@ nine	NONE
 rebounds	NONE
 ,	NONE
 an	NONE
-assist	WORD
+assist	NONE
 and	NONE
 five	NONE
-blocks	WORD
+blocks	NONE
 .	NONE
 Eric	NONE
 Gordon	NONE
@@ -214,7 +214,7 @@ two	NONE
 steals	NONE
 and	NONE
 two	NONE
-blocks	WORD
+blocks	NONE
 .	NONE
 Trevor	NONE
 Ariza	NONE
@@ -291,7 +291,7 @@ blocks	WORD
 .	NONE
 James	NONE
 Harden	NONE
-led	WORD
+led	NONE
 the	NONE
 way	NONE
 for	NONE
@@ -304,10 +304,10 @@ nine	NONE
 rebounds	NONE
 ,	NONE
 an	NONE
-assist	WORD
+assist	NONE
 and	NONE
 five	NONE
-blocks	WORD
+blocks	NONE
 .	NONE
 Rudy	NONE
 Gay	NONE
@@ -431,7 +431,7 @@ San	NAME
 Antonio	NAME
 Spurs	NAME
 on	NONE
-Saturday	NONE
+Saturday	NAME
 night	WORD
 ,	NONE
 while	NONE
@@ -442,10 +442,10 @@ home	WORD
 and	NONE
 await	WORD
 the	NONE
-Golden	NAME
+Golden	NONE
 State	NAME
 Warriors	NAME
 on	NONE
-Saturday	NONE
+Saturday	NAME
 evening	WORD
 .	NONE

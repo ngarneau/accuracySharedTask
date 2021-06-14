@@ -63,7 +63,7 @@ in	NONE
 .	NONE
 Bradley	NONE
 Beal	NONE
-led	WORD
+led	NONE
 the	NONE
 way	NONE
 for	NONE
@@ -122,7 +122,7 @@ Both	NONE
 teams	WORD
 play	WORD
 on	NONE
-Friday	NAME
+Friday	NONE
 ,	NONE
 as	NONE
 the	NONE

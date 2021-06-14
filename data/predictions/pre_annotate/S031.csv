@@ -1,7 +1,7 @@
 The	NONE
 Boston	NONE
 Celtics	NONE
-defeated	WORD
+defeated	NONE
 the	NONE
 Chicago	NONE
 Bulls	NONE
@@ -11,10 +11,10 @@ Bulls	NONE
 80	NONE
 ,	NONE
 at	NONE
-TD	NAME
-Garden	NAME
+TD	NONE
+Garden	NONE
 on	NONE
-Wednesday	NAME
+Wednesday	NONE
 .	NONE
 The	NONE
 Celtics	NONE
@@ -155,7 +155,7 @@ remaining	WORD
 The	NONE
 Celtics	NONE
 were	NONE
-led	WORD
+led	NONE
 by	NONE
 Al	NONE
 Horford	NONE
@@ -165,7 +165,7 @@ points	NONE
 ,	NONE
 which	NONE
 he	NONE
-supplemented	WORD
+supplemented	NONE
 with	NONE
 seven	NONE
 rebounds	NONE
@@ -174,7 +174,7 @@ six	NONE
 assists	NONE
 ,	NONE
 two	NONE
-blocks	WORD
+blocks	NONE
 and	NONE
 a	NONE
 steal	NONE
@@ -195,7 +195,7 @@ and	NONE
 a	NONE
 pair	NONE
 of	NONE
-blocks	WORD
+blocks	NONE
 .	NONE
 Al	NONE
 Horford	NONE
@@ -214,7 +214,7 @@ and	NONE
 a	NONE
 pair	NONE
 of	NONE
-blocks	WORD
+blocks	NONE
 .	NONE
 Kelly	NONE
 Olynyk	NONE
@@ -265,13 +265,13 @@ well	NOT_CHECKABLE
 .	NONE
 They	NONE
 're	NONE
-home	WORD
+home	NONE
 again	NONE
 on	NONE
-Wednesday	NAME
+Wednesday	NONE
 for	NONE
 a	NONE
-showdown	WORD
+showdown	NONE
 with	NONE
 the	NONE
 Orlando	NAME

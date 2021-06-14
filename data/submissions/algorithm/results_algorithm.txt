@@ -1,0 +1,242 @@
+--------------------------------------------------------------------------------
+GSML: EVALUATE
+comparing GSML => "./data/gsml.csv" to submission => "data/submissions/database/submission.csv"
+
+	-- GSML for categories: [NAME, NUMBER, WORD, CONTEXT, NOT_CHECKABLE, OTHER]
+	summary: recall => 0.485, precision => 0.308, token_recall => 0.435, token_precision => 0.342
+	breakdown:
+		recall
+			value => 0.48517298187808894
+			correct => 589
+			of_total => 1214
+		precision
+			value => 0.3082155939298796
+			correct => 589
+			of_total => 1911
+		token_recall
+			value => 0.43497509684560043
+			correct => 786
+			of_total => 1807
+		token_precision
+			value => 0.34248366013071896
+			correct => 786
+			of_total => 2295
+		correct_recall_debug
+			NAME => 181
+			NUMBER => 152
+			WORD => 219
+			CONTEXT => 5
+			NOT_CHECKABLE => 32
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 136
+			NUMBER => 322
+			WORD => 115
+			CONTEXT => 46
+			NOT_CHECKABLE => 5
+			OTHER => 1
+
+	-- GSML for categories: [NAME]
+	summary: recall => 0.527, precision => 0.671, token_recall => 0.57, token_precision => 0.694
+	breakdown:
+		recall
+			value => 0.526813880126183
+			correct => 167
+			of_total => 317
+		precision
+			value => 0.6706827309236948
+			correct => 167
+			of_total => 249
+		token_recall
+			value => 0.5697940503432495
+			correct => 249
+			of_total => 437
+		token_precision
+			value => 0.6935933147632312
+			correct => 249
+			of_total => 359
+		correct_recall_debug
+			NAME => 167
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 150
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+
+	-- GSML for categories: [NUMBER]
+	summary: recall => 0.3, precision => 0.377, token_recall => 0.293, token_precision => 0.36
+	breakdown:
+		recall
+			value => 0.29957805907172996
+			correct => 142
+			of_total => 474
+		precision
+			value => 0.376657824933687
+			correct => 142
+			of_total => 377
+		token_recall
+			value => 0.29338842975206614
+			correct => 142
+			of_total => 484
+		token_precision
+			value => 0.3604060913705584
+			correct => 142
+			of_total => 394
+		correct_recall_debug
+			NAME => 0
+			NUMBER => 142
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 0
+			NUMBER => 332
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+
+	-- GSML for categories: [WORD]
+	summary: recall => 0.578, precision => 0.203, token_recall => 0.413, token_precision => 0.224
+	breakdown:
+		recall
+			value => 0.5778443113772455
+			correct => 193
+			of_total => 334
+		precision
+			value => 0.20294426919032596
+			correct => 193
+			of_total => 951
+		token_recall
+			value => 0.41287284144427
+			correct => 263
+			of_total => 637
+		token_precision
+			value => 0.22363945578231292
+			correct => 263
+			of_total => 1176
+		correct_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 193
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 141
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+
+	-- GSML for categories: [CONTEXT]
+	summary: recall => None, precision => None, token_recall => None, token_precision => None
+	breakdown:
+		recall
+			value => 0.0
+			correct => 0
+			of_total => 51
+		precision
+			value => 0.0
+			correct => 0
+			of_total => 120
+		token_recall
+			value => 0.0
+			correct => 0
+			of_total => 106
+		token_precision
+			value => 0.0
+			correct => 0
+			of_total => 124
+		correct_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 51
+			NOT_CHECKABLE => 0
+			OTHER => 0
+
+	-- GSML for categories: [NOT_CHECKABLE]
+	summary: recall => 0.595, precision => 0.103, token_recall => 0.278, token_precision => 0.153
+	breakdown:
+		recall
+			value => 0.5945945945945946
+			correct => 22
+			of_total => 37
+		precision
+			value => 0.102803738317757
+			correct => 22
+			of_total => 214
+		token_recall
+			value => 0.2781954887218045
+			correct => 37
+			of_total => 133
+		token_precision
+			value => 0.15289256198347106
+			correct => 37
+			of_total => 242
+		correct_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 22
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 15
+			OTHER => 0
+
+	-- GSML for categories: [OTHER]
+	summary: recall => None, precision => None, token_recall => None, token_precision => None
+	breakdown:
+		recall
+			value => 0.0
+			correct => 0
+			of_total => 1
+		precision
+			value => None
+			correct => 0
+			of_total => 0
+		token_recall
+			value => 0.0
+			correct => 0
+			of_total => 10
+		token_precision
+			value => None
+			correct => 0
+			of_total => 0
+		correct_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 0
+		incorrect_recall_debug
+			NAME => 0
+			NUMBER => 0
+			WORD => 0
+			CONTEXT => 0
+			NOT_CHECKABLE => 0
+			OTHER => 1
+

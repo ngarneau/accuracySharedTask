@@ -1,0 +1,44 @@
+{% extends 'games/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col">
+
+        <h1>{{game.text_id}}</h1>
+        <h2>{{game.vis_name}} @ {{game.home_name}}, {{game.date}}</h2>
+        <h3>Sentence {{current_sent_index}} / {{num_sentences}}</h3>
+
+        <p><a href="{{game.bref_box_link}}">Box Score</a>
+        <br/><a href="{{game.bref_home_link}}">Home</a>
+        <br/><a href="{{game.bref_vis_link}}">Visitor</a>
+        <br/><a href="{{game.calendar_link}}">Calendar</a></p>
+
+        {% if previous_sentence %}
+        <p class="alert alert-info">{{previous_sentence.text}}</p>
+        {% endif %}
+
+        <p class="alert alert-primary">{{current_sentence.text}}</p>
+
+        {% if next_sentence %}
+        <p class="alert alert-info">{{next_sentence.text}}</p>
+        {% endif %}
+
+        <p>
+            <form method="POST">
+            {% for token in tokens %}
+                <select name="TOKEN_{{token.id}}" id="TOKEN_{{token.id}}">
+                    {% for v in label_set %}
+                    <option value="{{v}}" {% if token.annotation == v %} selected {% endif %}>{{v}}</option>
+                    {% endfor %}
+                </select>
+                {{token.text}}
+                <br/>
+            {% endfor %}
+                <a href="{% url 'games:detail' game.text_id previous_index %}">Previous</a>
+                <input type="submit" name="save" value="Save">
+                <input type="submit" name="continue" value="Save & Next">
+                {% csrf_token %}
+            </form>
+        </p>
+    </div>
+</div>
+{% endblock %}

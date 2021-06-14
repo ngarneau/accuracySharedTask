@@ -1,0 +1,12 @@
+{% extends 'games/base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col">
+        <ul class="list-group">
+            {% for game in games %}
+            <li class="list-group-item"><a href="{% url 'games:detail' game 0%}">{{ game.text_id }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

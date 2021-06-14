@@ -1,20 +1,24 @@
+import requests
 import joblib
 import locale
 import json
 import os
 from django.core.management.base import BaseCommand, CommandError
 from datetime import datetime as dt
+from bs4 import BeautifulSoup
 import pandas as pd
 from collections import defaultdict
 from tqdm import tqdm
 from nltk.corpus import stopwords
 
-from accuracy_evaluation.models import Game
+from accuracy_evaluation.models import Game, Sentence, Token
 
 
 class ErrorFinder:
-    def __init__(self, game_data):
+    def __init__(self, game_data, game_infos):
+        self.game_infos = game_infos
         self.CWN_clf = joblib.load('./models/text_clf.joblib')
+        self.binary_clf = joblib.load('./models/text_binary_clf.joblib')
         self.CWN_classes = ['CONTEXT', 'NOT_CHECKABLE', 'WORD']
         self.game_data = game_data
         self.word_numbers = {
@@ -37,7 +41,49 @@ class ErrorFinder:
         self.minutes = self.box_score['MIN']
         self.day = self.game_data['day']
         month, day, year = self.day.split('_')
-        self.weekday = dt(2017, int(month), int(day)).strftime("%A")
+        year = int("20" + year)
+        self.weekday = dt(year, int(month), int(day)).strftime("%A")
+        self.fetch_game_center()
+        self.fetch_next_games_infos()
+
+
+    def fetch_next_games_infos(self):
+        """Fetches the infos for the next team and day of the home and vis teams"""
+        base_url = "https://www.basketball-reference.com/"
+        self.home_next_team = ""
+        self.home_next_day = ""
+        self.vis_next_team = ""
+        self.vis_next_day = ""
+        game_info = self.game_infos[self.game_infos['TEXT_ID'] == self.file_id]
+
+        box_score_page_link = game_info['BREF_BOX'].tolist()[0]
+        html_text = requests.get(box_score_page_link).text
+        soup = BeautifulSoup(html_text, 'html.parser')
+        links = soup.find_all("div", {"class": "scorebox"})[0].find_all('a', {'class': 'next'}, href=True)
+
+        home_link = links[0]['href']
+        vis_link = links[1]['href']
+
+        home_next_game_html = requests.get(base_url + home_link).text
+        soup_home = BeautifulSoup(home_next_game_html, 'html.parser')
+        home_title, home_date = soup_home.find('h1').text.split(" Box Score, ")
+        self.home_next_team = home_title
+        self.home_next_day = dt.strptime(home_date, "%B %d, %Y").strftime("%A")
+
+        vis_next_game_html = requests.get(base_url + vis_link).text
+        soup_vis = BeautifulSoup(vis_next_game_html, 'html.parser')
+        vis_title, vis_date = soup_vis.find('h1').text.split(" Box Score, ")
+        self.vis_next_team = vis_title
+        self.vis_next_day = dt.strptime(vis_date, "%B %d, %Y").strftime("%A")
+
+
+    def fetch_game_center(self):
+        self.game_center = ""
+        game_info = self.game_infos[self.game_infos['TEXT_ID'] == self.file_id]
+        box_score_page_link = game_info['BREF_BOX'].tolist()[0]
+        html_text = requests.get(box_score_page_link).text
+        soup = BeautifulSoup(html_text, 'html.parser')
+        self.game_center = soup.find_all("div", {"class": "scorebox_meta"})[0].find_all('div')[1].text
 
 
     def retrieve_names(self, tokens):
@@ -90,7 +136,6 @@ class ErrorFinder:
             errors.append(error)
         return errors
 
-
     def find_name_correspondence(self, name):
         if name in self.home_name:
             return True
@@ -108,6 +153,30 @@ class ErrorFinder:
             return True
         if name == "NBA": # Hack
             return True
+        if name in self.game_center:
+            return True
+        if name in self.home_next_team:
+            return True
+        if name in self.home_next_day:
+            return True
+        if name in self.vis_next_team:
+            return True
+        if name in self.vis_next_day:
+            return True
+        return False
+
+    def is_int(self, s):
+        try:
+            int(s)
+            return True
+        except:
+            return False
+
+    def in_exception_names(self, s):
+        if s.lower() in stopwords.words('english') or s in ['FG', 'FT', 'JJ']:
+            return True
+        else:
+            return False
 
 
     def find_name_errors(self, tokens):
@@ -116,7 +185,7 @@ class ErrorFinder:
         names = self.retrieve_names(tokens)
         for t in tokens:
             error = "NONE"
-            if t[0].isupper() and t.lower() not in stopwords.words('english'):
+            if not self.is_int(t) and t[0].isupper() and not self.in_exception_names(t):
                 if not self.find_name_correspondence(t):
                     error = "NAME"
             errors.append(error)
@@ -124,18 +193,19 @@ class ErrorFinder:
 
     def find_cwn_errors(self, sentence: str):
         # Processes a string using the clf model
+        bin_probas = self.binary_clf.predict_proba([sentence])[0]
         probas = self.CWN_clf.predict_proba([sentence])
         errors = { c: list() for c in self.CWN_classes}
         tf_idf = self.CWN_clf.steps[0][1]
         reg = self.CWN_clf.steps[1][1]
         for i, prob in enumerate(probas[0]):
             for w in sentence.split():
-                if prob > 0.5: # Consider classifying words then
+                if prob > 0.5 and bin_probas[1] > 0.5: # Consider classifying words then
                     idx = tf_idf.vocabulary_.get(w)
                     if idx:
                         idf = tf_idf.idf_[idx]
                         coef = reg.coef_[i][idx]
-                        if idf * coef > 0:
+                        if idf * coef > 0.1:
                             errors[self.CWN_classes[i]].append(self.CWN_classes[i])
                         else:
                             errors[self.CWN_classes[i]].append("NONE")
@@ -173,45 +243,39 @@ class ErrorFinder:
         sentences = self.summary.split(' . ')
         tokens = self.summary.split()
         errors = list()
+        game = Game.objects.get(text_id=self.file_id)
         for i, sentence in enumerate(sentences):
-            errors += self.find_errors_in_sentence(sentence)
+            sentence_object = Sentence.objects.create(text=sentence, index=i, game=game)
+            sentence_object.save()
+            errors_in_sentence = self.find_errors_in_sentence(sentence)
             if i < len(sentences) - 1:
-                errors += ["NONE"]
+                tokens_in_sentence = sentence.split() + ['.']
+                errors_in_sentence += ["NONE"]  # Add a None for the period at the end
+            else:
+                tokens_in_sentence = sentence.split()
+            for y, (token, error) in enumerate(zip(tokens_in_sentence, errors_in_sentence)):
+                token_object = Token.objects.create(text=token, index=y, annotation=error, sentence=sentence_object)
+                token_object.sentence = sentence_object
+                token_object.save()
+            errors += errors_in_sentence
         return tokens, errors
 
 
 class Command(BaseCommand):
-    help = 'Imports basketball games'
+    help = 'Pre annotate basketball games'
+
+    def add_arguments(self, parser):
+        parser.add_argument('game_infos_path', type=str)
 
     def handle(self, *args, **options):
-
-
+        game_infos_path = options['game_infos_path']
+        game_infos = pd.read_csv(game_infos_path)
         with open('../data/shared_task.jsonl') as fhandle:
             for line in fhandle:
                 game_data = json.loads(line)
-                error_finder = ErrorFinder(game_data)
+                error_finder = ErrorFinder(game_data, game_infos)
                 tokens, errors = error_finder.find_errors()
                 with open(f"../data/predictions/pre_annotate/{error_finder.file_id}.csv", 'w') as fhandle:
                     for t, e in zip(tokens, errors):
                         fhandle.write(f"{t}\t{e}\n")
-
-
-        # dataset = pd.read_csv('../data/games.csv')
-        # for id, row in tqdm(dataset.iterrows()):
-        #     month, day, year = row['DATE'].split('_')
-        #     date_formatted = dt(2017, int(month), int(day)).strftime("%Y-%m-%d")
-        #     game = Game(
-        #         text_id=row['TEXT_ID'],
-        #         home_name=row['HOME_NAME'],
-        #         vis_name=row['VIS_NAME'],
-        #         line_id_from_test_set=row['LINE_ID_FROM_TEST_SET'],
-        #         generated_text=row['GENERATED_TEXT'],
-        #         detokenized_generated_text=row['DETOKENIZED_GENERATED_TEXT'],
-        #         date=date_formatted,
-        #         bref_box_link=row['BREF_BOX'],
-        #         bref_home_link=row['BREF_HOME'],
-        #         bref_vis_link=row['BREF_VIS'],
-        #         calendar_link=row['CALENDAR']
-        #     )
-        #     game.save()
         self.stdout.write(self.style.SUCCESS(f'Successfully ran command "{self.help}"'))

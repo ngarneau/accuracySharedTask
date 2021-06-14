@@ -1,7 +1,7 @@
 The	NONE
 Boston	NONE
 Celtics	NONE
-defeated	WORD
+defeated	NONE
 the	NONE
 Los	NONE
 Angeles	NONE
@@ -12,8 +12,8 @@ Lakers	NONE
 107	NONE
 ,	NONE
 at	NONE
-TD	NAME
-Garden	NAME
+TD	NONE
+Garden	NONE
 on	NONE
 Wednesday	NAME
 .	NONE
@@ -65,9 +65,9 @@ Lakers	NONE
 )	NONE
 .	NONE
 The	NONE
-team	WORD
+team	NONE
 was	NONE
-led	WORD
+led	NONE
 by	NONE
 Isaiah	NONE
 Thomas	NONE
@@ -77,7 +77,7 @@ points	NONE
 ,	NONE
 which	NONE
 he	NONE
-supplemented	WORD
+supplemented	NONE
 with	NONE
 six	NONE
 assists	NONE
@@ -147,7 +147,7 @@ six	NONE
 rebounds	NONE
 ,	NONE
 an	NONE
-assist	WORD
+assist	NONE
 and	NONE
 a	NONE
 pair	NONE
@@ -166,14 +166,14 @@ six	NONE
 rebounds	NONE
 ,	NONE
 an	NONE
-assist	WORD
+assist	NONE
 and	NONE
 two	NONE
 steals	NONE
 .	NONE
 Al	NONE
 Horford	NONE
-supplied	WORD
+supplied	NONE
 11	NONE
 points	NONE
 ,	NONE
@@ -184,7 +184,7 @@ eight	NONE
 assists	NONE
 and	NONE
 a	NONE
-block	WORD
+block	NONE
 .	NONE
 Kelly	NONE
 Olynyk	NONE
