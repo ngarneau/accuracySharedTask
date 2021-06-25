@@ -15,7 +15,8 @@ from accuracy_evaluation.models import Game, Sentence, Token
 
 
 class ErrorFinder:
-    def __init__(self, game_data, game_infos):
+    def __init__(self, game_data, game_infos, texts_path):
+        self.texts_path = texts_path
         self.game_infos = game_infos
         self.CWN_clf = joblib.load('./models/text_clf.joblib')
         self.binary_clf = joblib.load('./models/text_binary_clf.joblib')
@@ -28,7 +29,7 @@ class ErrorFinder:
             # 'pair'
         }
         self.file_id = game_data['shared_task_text_id']
-        self.summary = open(f'../data/texts/{self.file_id}.txt').read()
+        self.summary = open(f'{self.texts_path}/{self.file_id}.txt').read()
         self.home_name = game_data['home_name']
         self.vis_name = game_data['vis_name']
         self.home_city = game_data['home_city']
@@ -266,14 +267,18 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('game_infos_path', type=str)
+        parser.add_argument('shared_task_path', type=str)
+        parser.add_argument('texts_path', type=str)
 
     def handle(self, *args, **options):
         game_infos_path = options['game_infos_path']
+        shared_task_path = options['shared_task_path']
+        texts_path = options['texts_path']
         game_infos = pd.read_csv(game_infos_path)
-        with open('../data/shared_task.jsonl') as fhandle:
+        with open(shared_task_path) as fhandle:
             for line in fhandle:
                 game_data = json.loads(line)
-                error_finder = ErrorFinder(game_data, game_infos)
+                error_finder = ErrorFinder(game_data, game_infos, texts_path)
                 tokens, errors = error_finder.find_errors()
                 with open(f"../data/predictions/pre_annotate/{error_finder.file_id}.csv", 'w') as fhandle:
                     for t, e in zip(tokens, errors):
